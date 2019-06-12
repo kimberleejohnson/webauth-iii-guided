@@ -45,7 +45,16 @@ router.post('/login', (req, res) => {
 });
 
 function generateToken(user) {
+  // Defining payload, containing claims (info) for token 
+  const payload = {
+    subject: user.id, 
+    username: user.username,
+    roles: ['student'] // Faking this with a string for now 
+  }
 
+
+
+  return jwt.sign(payload, secret, options); // returns a token
 }
 
 module.exports = router;
