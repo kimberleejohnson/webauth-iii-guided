@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const Users = require('../users/users-model.js');
 
 module.exports = (req, res, next) => {
+
+  // Eventually we want to change headers to check for tokens 
   const { username, password } = req.headers;
 
   if (username && password) {

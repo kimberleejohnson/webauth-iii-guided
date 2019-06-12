@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 
 const Users = require('../users/users-model.js');
 
+// We need to require jsonwebtoken, after npm install 
+const jwt = require('jsonwebtoken'); 
+
 // for endpoints beginning with /api/auth
 router.post('/register', (req, res) => {
   let user = req.body;
@@ -25,8 +28,12 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        // When using tokens, we need to manually generate and send token as part of response
+        const token = generateToken(user); 
+
         res.status(200).json({
-          message: `Welcome ${user.username}!`,
+          // After token generated, we have to add to response 
+          message: `Welcome ${user.username}!`, token
         });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
@@ -36,5 +43,9 @@ router.post('/login', (req, res) => {
       res.status(500).json(error);
     });
 });
+
+function generateToken(user) {
+
+}
 
 module.exports = router;
