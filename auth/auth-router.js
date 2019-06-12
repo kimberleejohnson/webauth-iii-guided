@@ -2,6 +2,8 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 
 const Users = require('../users/users-model.js');
+// Requiring secrets, then we can put in our function below 
+const secrets = require('../config/secrets.js'); 
 
 // We need to require jsonwebtoken, after npm install 
 const jwt = require('jsonwebtoken'); 
@@ -47,14 +49,19 @@ router.post('/login', (req, res) => {
 function generateToken(user) {
   // Defining payload, containing claims (info) for token 
   const payload = {
-    subject: user.id, 
-    username: user.username,
-    roles: ['student'] // Faking this with a string for now 
+    subject: user.id, // Standard claim = sub
+    
+    username: user.username, // Both of these are just data 
+    roles: ['student'] // Faking this with a string for now; can add any data 
+  }
+
+  const options = {
+    expiresIn: '1d' // Good for one day
   }
 
 
-
-  return jwt.sign(payload, secret, options); // returns a token
+  // Grabs the jwtSecret to verify token 
+  return jwt.sign(payload, secrets.jwtSecret, options); // returns a token
 }
 
 module.exports = router;
